@@ -1,11 +1,12 @@
 import Sword from "./sword.js";
 
-export default class Player {
-  constructor(width, height, position, color, canvas) {
+export default class Sprite {
+  constructor(width, height, position, color, face_dir, canvas) {
     this.width = width;
     this.height = height;
     this.position = position;
     this.color = color;
+    this.face_dir = face_dir;
     this.canvas = canvas;
 
     this.velocity = { x: 0, y: 0 };

@@ -1,4 +1,4 @@
-import Player from "./components/player.js";
+import Sprite from "./components/sprite.js";
 
 const c = document.querySelector("#myCanvas");
 const ctx = c.getContext("2d");
@@ -6,11 +6,12 @@ const ctx = c.getContext("2d");
 c.width = 1000;
 c.height = 500;
 
-let player = new Player(
+let player = new Sprite(
   30,
   120,
   { x: c.width / 2, y: c.height - 120 },
   "red",
+  "right",
   c
 ); // player object
 
@@ -30,7 +31,7 @@ function gameLoop(ctime) {
   ctx.clearRect(0, 0, c.width, c.height);
 
   playerMovementFunc();
-  playerWallCollision();
+  spriteWallCollision(player);
   player.draw(ctx);
   player.movement();
 }
@@ -58,13 +59,16 @@ function playerMovementFunc() {
   }
 }
 
-function playerWallCollision() {
-  if (player.position.x < 0 && keyVal == 37) {
+function spriteWallCollision(spriteElem) {
+  if (spriteElem.position.x < 0 && keyVal == 37) {
+    spriteElem.velocity.x = 0;
+    spriteElem.position.x = 0; // sets position to 0
+  } else if (
+    spriteElem.position.x + spriteElem.width > c.width &&
+    keyVal == 39
+  ) {
     player.velocity.x = 0;
-    player.position.x = 0; // sets position to 0
-  } else if (player.position.x + player.width > c.width && keyVal == 39) {
-    player.velocity.x = 0;
-    player.position.x = c.width - player.width; // sets position to c.width - player.width
+    spriteElem.position.x = c.width - spriteElem.width; // sets position to c.width - spriteElem.width
   }
 }
 
