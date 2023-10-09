@@ -12,7 +12,13 @@ export default class Sprite {
     this.velocity = { x: 0, y: 0 };
     this.gravity = 0.8;
 
-    this.sword = new Sword(8, 90, { x: position.x, y: position.y }, "blue");
+    this.sword = new Sword(
+      8,
+      90,
+      { x: position.x, y: position.y },
+      "blue",
+      this.face_dir
+    );
     this.swordAngle = 10;
     this.veloOfAngle = 0;
     this.swordInertia = -15;
@@ -28,6 +34,8 @@ export default class Sprite {
 
     this.sword.draw(ctx);
     this.sword.position = this.position;
+
+    this.sword.face_dir = this.face_dir;
   }
 
   movement() {
@@ -58,6 +66,8 @@ export default class Sprite {
       this.veloOfAngle += this.swordInertia;
     }
 
-    this.sword.angle = this.swordAngle;
+    this.face_dir == "right"
+      ? (this.sword.angle = this.swordAngle)
+      : (this.sword.angle = -this.swordAngle);
   }
 }
