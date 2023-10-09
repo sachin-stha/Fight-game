@@ -10,4 +10,5 @@ body {
 
 #myCanvas {
   background-color: white;
+  transform: translateZ(0);
 }

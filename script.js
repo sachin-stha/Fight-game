@@ -19,6 +19,7 @@ let playerMovement = {
   right: false,
   left: false,
   jump: false,
+  sword: false,
 };
 let ptime = 0;
 function gameLoop(ctime) {
@@ -28,11 +29,10 @@ function gameLoop(ctime) {
 
   ctx.clearRect(0, 0, c.width, c.height);
 
-  console.log(playerMovement);
-
   playerMovementFunc();
-
+  playerWallCollision();
   player.draw(ctx);
+  player.movement();
 }
 requestAnimationFrame(gameLoop);
 
@@ -40,6 +40,10 @@ function playerMovementFunc() {
   playerMovement.jump && player.position.y + player.height >= c.height // only for jump movement, independent of x axis movements
     ? (player.velocity.y = -15)
     : "";
+
+  if (playerMovement.sword) {
+    player.veloOfAngle = 20; // make velocity if rotation of sword to 20
+  }
 
   // left and right movement are interconnect with each other
   if (playerMovement.left && keyVal == 37) {
@@ -66,7 +70,7 @@ function playerWallCollision() {
 
 document.addEventListener("keydown", function (e) {
   switch (e.which) {
-    case 32:
+    case 38:
       playerMovement.jump = true;
       break;
 
@@ -79,12 +83,16 @@ document.addEventListener("keydown", function (e) {
       playerMovement.right = true;
       keyVal = e.which;
       break;
+
+    case 32:
+      playerMovement.sword = true;
+      break;
   }
 });
 
 document.addEventListener("keyup", function (e) {
   switch (e.which) {
-    case 32:
+    case 38:
       playerMovement.jump = false;
       break;
 
@@ -94,6 +102,10 @@ document.addEventListener("keyup", function (e) {
 
     case 39:
       playerMovement.right = false;
+      break;
+
+    case 32:
+      playerMovement.sword = false;
       break;
   }
 });
