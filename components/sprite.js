@@ -1,4 +1,5 @@
 import Sword from "./sword.js";
+import HealthBar from "./healthBar.js";
 
 export default class Sprite {
   constructor(width, height, position, color, face_dir, canvas) {
@@ -23,7 +24,27 @@ export default class Sprite {
     this.veloOfAngle = 0;
     this.swordInertia = -15;
     this.maxAngle = 180;
-    this.minAngle = 10;
+    this.minAngle = 20;
+
+    this.face_dir == "right"
+      ? (this.healthBar = new HealthBar(
+          300,
+          10,
+          { x: 200, y: 40 },
+          this.color,
+          1,
+          this.face_dir
+        ))
+      : (this.healthBar = new HealthBar(
+          300,
+          10,
+          { x: canvas.width - 500, y: 40 },
+          this.color,
+          1,
+          this.face_dir
+        ));
+
+    this.health = 200;
   }
 
   draw(ctx) {
@@ -36,6 +57,10 @@ export default class Sprite {
     this.sword.position = this.position;
 
     this.sword.face_dir = this.face_dir;
+
+    this.healthBar.draw(ctx);
+
+    this.healthBar.healthPercentage = this.health / 200;
   }
 
   movement() {

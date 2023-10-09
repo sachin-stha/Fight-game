@@ -8,7 +8,7 @@ export default class Sword {
     this.color = color;
     this.face_dir = face_dir;
 
-    this.angle = 10;
+    this.angle = 0;
   }
 
   draw(ctx) {

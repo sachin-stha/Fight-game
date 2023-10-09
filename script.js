@@ -22,7 +22,7 @@ let player2 = new Sprite(
   "blue",
   "right",
   c
-);
+); // player 2 object
 
 let playerMovement = {
   right: false,
@@ -30,7 +30,7 @@ let playerMovement = {
   jump: false,
   sword: false,
   keyVal: 0,
-};
+}; // player key movements
 
 let player2Movement = {
   right: false,
@@ -38,7 +38,7 @@ let player2Movement = {
   jump: false,
   sword: false,
   keyVal: 0,
-};
+}; // // player 2 key movements
 
 let ptime = 0;
 function gameLoop(ctime) {
