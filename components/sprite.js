@@ -22,8 +22,8 @@ export default class Sprite {
     );
     this.swordAngle = 10;
     this.veloOfAngle = 0;
-    this.swordInertia = -15;
-    this.maxAngle = 180;
+    this.swordInertia = -10;
+    this.maxAngle = 130;
     this.minAngle = 20;
 
     this.face_dir == "right"
@@ -77,7 +77,7 @@ export default class Sprite {
 
   swordMovement() {
     if (this.swordAngle >= this.maxAngle) {
-      this.swordAngle = 175;
+      this.swordAngle = this.maxAngle - 5;
     }
 
     if (this.swordAngle < this.maxAngle) {

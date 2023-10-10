@@ -4,7 +4,9 @@ const c = document.querySelector("#myCanvas");
 const ctx = c.getContext("2d");
 
 c.width = 1000;
-c.height = 500;
+c.height = 400;
+
+let gameState = true;
 
 let player = new Sprite(
   30,
@@ -42,7 +44,7 @@ let player2Movement = {
 
 let ptime = 0;
 function gameLoop(ctime) {
-  requestAnimationFrame(gameLoop);
+  gameState ? requestAnimationFrame(gameLoop) : "";
   if (ctime - ptime < 1) return;
   ptime = ctime;
 
@@ -65,20 +67,61 @@ function gameLoop(ctime) {
   player2.draw(ctx);
   player2.movement();
 
-  // for facing towards each other in any positions
-  if (player.position.x < player2.position.x) {
-    player.face_dir = "right";
-    player2.face_dir = "left";
-  } else {
-    player2.face_dir = "right";
-    player.face_dir = "left";
-  }
+  [player2, player].forEach((e, i, arr) => {
+    if (e.health <= 0) {
+      gameState = false;
+      alert(arr[i].color + " player looses!!! <br> Refresh page to play again");
+    }
+
+    // for facing towards each other in any positions
+    if (arr[0].position.x < arr[1].position.x) {
+      arr[0].face_dir = "right";
+      arr[1].face_dir = "left";
+    } else {
+      arr[0].face_dir = "left";
+      arr[1].face_dir = "right";
+    }
+
+    function playerAttackHealthDecrease(elemArr) {
+      // changes the condition of attack, in respect to the side player is standing
+      if (
+        arr[0].position.y + arr[0].height >= arr[1].position.y &&
+        arr[0].position.y + arr[0].height <= arr[1].position.y + arr[1].height
+      ) {
+        if (elemArr[0].swordAngle > 40 && elemArr[0].swordAngle < 110) {
+          if (
+            elemArr[0].sword.position.x +
+              Math.sin((elemArr[0].swordAngle * Math.PI) / 180) *
+                elemArr[0].sword.height >
+            elemArr[1].position.x
+          ) {
+            elemArr[1].health > 0 ? (elemArr[1].health -= 1) : "";
+          }
+        }
+
+        if (elemArr[1].swordAngle > 40 && elemArr[1].swordAngle < 110) {
+          if (
+            elemArr[1].sword.position.x -
+              Math.sin((elemArr[1].swordAngle * Math.PI) / 180) *
+                elemArr[1].sword.height <
+            elemArr[0].position.x + arr[0].width
+          ) {
+            elemArr[0].health > 0 ? (elemArr[0].health -= 1) : "";
+          }
+        }
+      }
+    }
+
+    arr[0].face_dir == "right"
+      ? playerAttackHealthDecrease([arr[0], arr[1]])
+      : playerAttackHealthDecrease([arr[1], arr[0]]);
+  });
 }
-requestAnimationFrame(gameLoop);
+gameLoop();
 
 function playerMovementFunc(spriteMovement, spriteElem, keyVal, keyNumArr) {
   spriteMovement.jump && spriteElem.position.y + spriteElem.height >= c.height // only for jump movement, independent of x axis movements
-    ? (spriteElem.velocity.y = -15)
+    ? (spriteElem.velocity.y = -20)
     : "";
 
   if (spriteMovement.sword) {
@@ -87,9 +130,9 @@ function playerMovementFunc(spriteMovement, spriteElem, keyVal, keyNumArr) {
 
   // left and right movement are interconnect with each other
   if (spriteMovement.left && keyVal == keyNumArr[0]) {
-    spriteElem.velocity.x = -15;
+    spriteElem.velocity.x = -10;
   } else if (spriteMovement.right && keyVal == keyNumArr[1]) {
-    spriteElem.velocity.x = 15;
+    spriteElem.velocity.x = 10;
   }
 
   // player velocity turns 0 only if both x-axis movement is false
@@ -129,7 +172,7 @@ document.addEventListener("keydown", function (e) {
       break;
 
     case 16:
-      playerMovement.sword = true;
+      gameState ? (playerMovement.sword = true) : "";
       break;
 
     // player 2 keys
@@ -148,7 +191,7 @@ document.addEventListener("keydown", function (e) {
       break;
 
     case 32:
-      player2Movement.sword = true;
+      gameState ? (player2Movement.sword = true) : "";
       break;
   }
 });
